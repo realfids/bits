@@ -1,0 +1,2 @@
+- The RECOVERY trial in the UK  conducted for approximately $500 per participant—almost 80 times cheaper than the estimated $41,000 per patient for pivotal trials of new therapeutics in the U.S.
+- Completing the FDA’s two-page Form 1572 is estimated to take around 100 hours per response, especially burdensome for less experienced institutions, contributing significantly to administrative overhead
