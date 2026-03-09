@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Impact Certificates × Prediction Markets</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg-dark: #0f1117;
+    --bg-slide: #151820;
+    --text: #e4e4e7;
+    --text-dim: #9ca3af;
+    --accent: #38bdf8;
+    --accent2: #818cf8;
+    --accent3: #34d399;
+    --code-bg: #1e2030;
+    --border: #2a2d3a;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  .deck {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    padding: 3rem 5rem;
+    background: var(--bg-slide);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+
+  .slide.active {
+    display: flex;
+    opacity: 1;
+  }
+
+  .slide.title-slide {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: linear-gradient(135deg, #0f1117 0%, #1a1f2e 50%, #0f1117 100%);
+  }
+
+  .slide.title-slide h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  .slide.title-slide .subtitle {
+    font-size: 1.15rem;
+    color: var(--text-dim);
+    font-weight: 300;
+    max-width: 600px;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 50%, var(--accent3) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+  }
+
+  p, .desc {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text-dim);
+    max-width: 720px;
+    margin-bottom: 1rem;
+  }
+
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    line-height: 1.55;
+    color: var(--text);
+    max-height: 72vh;
+    flex-shrink: 1;
+  }
+
+  .split {
+    display: flex;
+    gap: 2.5rem;
+    align-items: flex-start;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .split .left { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .split .right { flex: 1.3; display: flex; flex-direction: column; min-height: 0; }
+  .split .right pre { flex: 1; min-height: 0; }
+
+  .split-equal .left, .split-equal .right { flex: 1; }
+
+  .tag {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+  }
+
+  .tag.blue { background: rgba(56,189,248,0.15); color: var(--accent); }
+  .tag.purple { background: rgba(129,140,248,0.15); color: var(--accent2); }
+  .tag.green { background: rgba(52,211,153,0.15); color: var(--accent3); }
+
+  .key-point {
+    border-left: 3px solid var(--accent);
+    padding-left: 1rem;
+    margin: 1rem 0;
+    color: var(--text);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .nav {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 2rem;
+    display: flex;
+    gap: 0.5rem;
+    z-index: 100;
+    align-items: center;
+  }
+
+  .nav button {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    transition: background 0.2s;
+  }
+
+  .nav button:hover { background: var(--border); }
+
+  .counter {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 0.35s ease;
+    z-index: 100;
+  }
+
+  .cyan { color: var(--accent); }
+  .purple { color: var(--accent2); }
+  .green { color: var(--accent3); }
+
+  .section-slide {
+    justify-content: center;
+    align-items: flex-start;
+    background: linear-gradient(135deg, #0f1117 0%, #151820 100%);
+  }
+
+  .section-slide h2 {
+    font-size: 2.2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .full-diagram {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .full-diagram pre {
+    flex: 1;
+    min-height: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="deck" id="deck">
+
+<!-- SLIDE 1: Title -->
+<div class="slide title-slide active">
+  <h1><span class="gradient-text">Impact Certificates<br>× Prediction Markets</span></h1>
+  <p class="subtitle">Market mechanisms for R&D capital allocation — using conditional forecasting to price, trade, and fund breakthrough research</p>
+</div>
+
+<!-- SLIDE 2: The Problem -->
+<div class="slide">
+  <div class="split">
+    <div class="left">
+      <span class="tag blue">The Problem</span>
+      <h2>Philanthropic funding has terrible information properties</h2>
+      <p>Traditional grantmaking forces a single entity to simultaneously predict which projects will succeed, evaluate whether they did, and provide the capital. Markets separate these roles.</p>
+      <div class="key-point">
+        <strong>Three roles conflated in grantmaking:</strong><br>
+        Doers — people who execute projects<br>
+        Evaluators — people who assess impact<br>
+        Capital allocators — people who bear risk
+      </div>
+      <p>Certificates of impact (Christiano, 2014) proposed separating these roles by creating tradeable claims on completed work.</p>
+    </div>
+    <div class="right">
+      <pre>
+Traditional Grantmaking:
+
+  Funder
+  ├── predicts success (badly)
+  ├── provides capital (before results)
+  └── evaluates impact (conflicts)
+       │
+       ▼
+  Researcher does work
+       │
+       ▼
+  Maybe it worked?  ¯\_(ツ)_/¯
+
+
+
+Impact Certificates:
+
+  Doers ──── mint certificates ────┐
+                                    │
+  Speculators ── fund early ───────┤
+                                    │
+  Evaluators ── buy retroactively ─┘
+       │
+       ▼
+  Market prices aggregate information
+  from ALL participants continuously
+      </pre>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: Basic Loop -->
+<div class="slide">
+  <span class="tag purple">Core Mechanism</span>
+  <h2>How forecasting ties to certificates</h2>
+  <div class="full-diagram">
+    <pre>
+  FUNDER ($100M)
+  commits to buying certificates
+  at prediction-market-implied prices
+       │
+       │ "I will pay $X per basis point
+       │  of probability shift on
+       │  T1D outcomes"
+       │
+       ▼
+┌─────────────────────────────────────────────────┐
+│         PREDICTION MARKETS                       │
+│                                                  │
+│  Market A: P(outcome | project funded)  = 0.25   │
+│  Market B: P(outcome | project NOT funded) = 0.07│
+│                                                  │
+│  ∴ Counterfactual impact = 0.18                  │
+│                                                  │
+│  Superforecasters trade continuously,            │
+│  updating as evidence arrives                    │
+└────────────────────┬────────────────────────────┘
+                     │
+                     │ generates PRICE SIGNAL
+                     ▼
+┌─────────────────────────────────────────────────┐
+│         IMPACT CERTIFICATES                      │
+│                                                  │
+│  Certificate value =                             │
+│    counterfactual impact × outcome value          │
+│    = 0.18 × $500M (societal value of cure)       │
+│    = $90M (total impact value)                   │
+│                                                  │
+│  Priced relative to pot commitment:              │
+│    e.g. this project's share = $4.5M             │
+└────────────────────┬────────────────────────────┘
+                     │
+                     │ certificates are OWNED by:
+        ┌────────────┼────────────┐
+        ▼            ▼            ▼
+   Researchers    Seed VCs     Funder
+   (40%)          (25%)        (35%)
+    </pre>
+  </div>
+</div>
+
+<!-- SLIDE 4: Price Updates -->
+<div class="slide">
+  <span class="tag green">Price Discovery</span>
+  <h2>Continuous price updates create intermediate liquidity</h2>
+  <div class="full-diagram">
+    <pre>
+TIME ──────────────────────────────────────────────────────────►
+
+t=0                    t=1                    t=2
+Lab starts             Primate results        Phase I trial
+                       published              succeeds
+
+PREDICTION MARKET:     PREDICTION MARKET:     PREDICTION MARKET:
+
+P(cure|proj) = 0.05    P(cure|proj) = 0.15    P(cure|proj) = 0.30
+P(cure|no)   = 0.03    P(cure|no)   = 0.04    P(cure|no)   = 0.05
+──────────────────     ──────────────────     ──────────────────
+Δ = 0.02               Δ = 0.11               Δ = 0.25
+
+CERTIFICATE VALUE:     CERTIFICATE VALUE:     CERTIFICATE VALUE:
+
+$200K                  $1.1M                  $2.5M
+     ╲                      ╲                      ╲
+      ╲ investors can        ╲ VC exits at          ╲ pharma enters
+        enter cheaply          5.5× return            as buyer
+
+
+  ◄──── EARLY RISK ────►◄──── DERISKED ────►◄──── CONVENTIONAL ────►
+        (Impact SAFEs)     (certificates        (licensing,
+                            tradeable)           acquisition)
+    </pre>
+  </div>
+  <div class="key-point" style="margin-top:0.5rem">
+    Key insight: investors can exit <em>before</em> the outcome resolves.
+    The prediction market IS the intermediate price signal that makes long-horizon R&D investable.
+  </div>
+</div>
+
+<!-- SLIDE 5: Certificate Ownership -->
+<div class="slide">
+  <span class="tag blue">Ownership</span>
+  <h2>The certificate ownership chain</h2>
+  <div class="full-diagram">
+    <pre>
+  Researcher mints certificate
+  ┌──────────────────────────┐
+  │ CERT #0042               │    sells 35% to funder (Impact SAFE, $2M)
+  │ "Magnetogenetic insulin  │    sells 25% to VC (Impact SAFE, $1.5M)
+  │  control in primates"    │         │
+  │                          │         ▼
+  │ Linked to outcome:       │    ┌──────────────────────────┐
+  │ "Insulin independence    │    │ CERT #0042               │
+  │  via engineered cells"   │    │                          │
+  │                          │    │ Dr. X  ████████░░░  40%  │
+  │ Owner: Dr. X (100%)      │    │ Funder █████░░░░░░  35%  │
+  └──────────────────────────┘    │ VC     ███░░░░░░░░  25%  │
+                                  └──────────┬───────────────┘
+                                             │
+       prediction market updates price ──────┤
+       VC sells to Pharma Co at 5× ──────────┘
+                                             │
+                                             ▼
+                     ┌──────────────────────────────────────────┐
+                     │ SETTLEMENT (outcome resolved)            │
+                     │                                          │
+                     │ Dr. X  → $4.0M                          │
+                     │ Funder → keeps certs (philanthropic ROI) │
+                     │ Pharma → $2.5M (+ licensing relationship)│
+                     └──────────────────────────────────────────┘
+    </pre>
+  </div>
+</div>
+
+<!-- SLIDE 6: Competing Projects -->
+<div class="slide">
+  <span class="tag purple">Competition</span>
+  <h2>Multiple projects compete on the same outcome</h2>
+  <div class="split split-equal">
+    <div class="left">
+      <pre>
+OUTCOME: "Insulin independence by 2035"
+
+            PREDICTION MARKET
+            ┌────────────────────────┐
+            │ P(outcome) = 0.22      │
+            │                        │
+            │ Decomposed by project: │
+            └──┬────────┬────────┬───┘
+               │        │        │
+  ┌────────────┴┐ ┌─────┴──────┐ ┌┴───────────┐
+  │Magnetogenet.│ │Conditional │ │Stem cell   │
+  │             │ │RNA         │ │encapsulat. │
+  │ Δ = 0.09   │ │ Δ = 0.06   │ │ Δ = 0.04   │
+  │ Certs: $X  │ │ Certs: $Y  │ │ Certs: $Z  │
+  └─────────────┘ └────────────┘ └────────────┘
+      </pre>
+    </div>
+    <div class="right" style="justify-content:center">
+      <div class="key-point">
+        <strong>Δs don't sum to 0.22</strong> — projects have correlated and overlapping impact pathways. The market handles this automatically via conditional pricing.
+      </div>
+      <div class="key-point" style="border-color:var(--accent3)">
+        If magnetogenetics publishes a breakthrough:<br>
+        → its Δ rises (certs appreciate)<br>
+        → others may <strong>drop</strong> (substitution) or <strong>rise</strong> (complementary knowledge)<br>
+        → market reflects this in real time<br>
+        → <em>no committee needed</em>
+      </div>
+      <p>Certificates from different projects aimed at the same outcome become partially fungible — enabling index funds and portfolio diversification.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: Section break -->
+<div class="slide section-slide">
+  <h2 class="gradient-text">Reflexivity &amp; Capital Access</h2>
+  <p>Does the price at which a project is trading affect the amount of cash it has access to? Yes — and this creates both opportunity and risk.</p>
+</div>
+
+<!-- SLIDE 8: Certificate Price → Capital -->
+<div class="slide">
+  <span class="tag green">Capital Access</span>
+  <h2>Certificate price drives funding capacity</h2>
+  <div class="split">
+    <div class="left">
+      <pre>
+Certificate price rises
+from $1M → $3M
+
+The team can now:
+
+┌─────────────────────────────┐
+│                             │
+│ 1. SELL MORE CERTIFICATES   │
+│    Sell 15% → $450K         │
+│    (vs $150K at old price)  │
+│                             │
+│ 2. BORROW AGAINST CERTS    │
+│    Use as collateral        │
+│    Lender sees market price │
+│    as objective valuation   │
+│                             │
+│ 3. ATTRACT TALENT           │
+│    Pay postdocs in certs    │
+│    "Your 2% = $60K now     │
+│     and could grow"        │
+│                             │
+└─────────────────────────────┘
+      </pre>
+    </div>
+    <div class="right">
+      <pre>
+THE REFLEXIVITY PROBLEM
+
+Normal equity:
+  Price ↑ → raise capital →
+  grow → earnings ↑ → price ↑
+  (grounded by real cash flows)
+
+Impact certificates:
+  Price ↑ → raise capital →
+  do more work → ...
+                 │
+                 ▼
+    ┌─────────────────────────┐
+    │ Does more work actually │
+    │ shift the conditional   │
+    │ probability?            │
+    │                         │
+    │ Maybe yes: more money   │
+    │ = faster experiments    │
+    │ = higher P(success)     │
+    │                         │
+    │ Maybe no: diminishing   │
+    │ returns, or the binding │
+    │ constraint is an IDEA   │
+    │ not money               │
+    └─────────────────────────┘
+
+Forecasters are the immune system.
+They prevent Ponzi-like dynamics.
+      </pre>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9: Capital-Sensitive Market -->
+<div class="slide">
+  <span class="tag blue">Key Innovation</span>
+  <h2>Capital-sensitive prediction markets</h2>
+  <div class="split">
+    <div class="left">
+      <pre>
+Instead of binary conditional:
+  P(outcome | funded)
+  vs P(outcome | not funded)
+
+You want a CONTINUOUS function:
+  P(outcome | project receives $X)
+
+  P(cure)
+  0.30 ┤                     ╭─────
+       │                 ╭───╯
+  0.25 ┤             ╭───╯
+       │         ╭───╯
+  0.20 ┤     ╭───╯
+       │ ╭───╯
+  0.15 ┤─╯
+       │
+  0.05 ┤  ← base rate
+       └──┬────┬────┬────┬────┬──
+         $0  $1M  $2M  $5M  $10M
+              capital deployed
+
+  MARGINAL VALUE OF NEXT DOLLAR =
+    slope × outcome value
+
+  Flat → stop funding
+  Steep → pour in capital
+      </pre>
+    </div>
+    <div class="right">
+      <pre>
+CAPITAL ALLOCATION ACROSS PROJECTS
+
+Marginal value
+of next $1M
+    │
+$8M ┤ ○ Magnetogenetics
+    │       ← steep, underfunded
+$6M ┤         INVEST MORE
+    │
+$4M ┤    ○ Conditional RNA
+    │       ← moderate slope
+$2M ┤
+    │       ○ Encapsulation
+$1M ┤          ← flattening
+    │             ○ Artif.
+    ├─ ─ ─ ─ ─ ─ ─ pancreas
+    │               ← flat
+    └────────────────────────
+
+OPTIMAL: equalize marginal
+returns across all projects
+(standard portfolio theory)
+
+The prediction market GENERATES
+these curves automatically.
+      </pre>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10: Elicitation -->
+<div class="slide">
+  <span class="tag purple">Elicitation</span>
+  <h2>Extracting the curve cheaply from forecasters</h2>
+  <div class="split">
+    <div class="left">
+      <p>You need to recover a P(success | $X) curve with ~3–4 degrees of freedom. Don't ask 20 point estimates.</p>
+      <div class="key-point" style="border-color:var(--accent2)">
+        <strong>Parametric (3 questions):</strong><br>
+        P_base — without this project?<br>
+        P_max — unlimited resources?<br>
+        τ — budget to get halfway?
+      </div>
+      <div class="key-point" style="border-color:var(--accent3)">
+        <strong>Inverse approach (3 questions):</strong><br>
+        Min budget for 25% chance?<br>
+        Min budget for 50% chance?<br>
+        Min budget for 75% chance?<br>
+        → invert to get full curve
+      </div>
+      <div class="key-point">
+        <strong>Pairwise (cheapest per forecaster):</strong><br>
+        "Project A at $2M vs Project B at $5M —<br>which is more likely to hit milestone?"<br>
+        Ratio judgments → Bradley-Terry → full matrix
+      </div>
+    </div>
+    <div class="right">
+      <pre>
+PARAMETRIC MODEL
+
+P(s|$X) = P_base + (P_max - P_base)
+           × (1 - e^(-X/τ))
+
+  P(s)
+  P_max ─ ─ ─ ─ ─ ─ ─ ─ ─ ────────
+       │                  ╭──╯
+       │              ╭───╯
+       │          ╭───╯
+       │      ╭───╯
+       │  ╭───╯
+  P_base──╯
+       │  ↑
+       └──┼────────────────── capital
+          τ (63% of max effect)
+
+
+PRACTICAL: 3 LAYERS
+
+Layer 1 (cheap, always on):
+  Parametric elicitation
+  3 numbers per forecaster
+
+Layer 2 (top ~10 projects):
+  Conditional prediction markets
+  at 3 funding thresholds
+
+Layer 3 (free, continuous):
+  Observe revealed capital levels
+  Curve traced empirically over time
+  → eventually dominates Layers 1-2
+      </pre>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 11: Application -->
+<div class="slide">
+  <span class="tag green">Application</span>
+  <h2>$100M T1D funder — deployment structure</h2>
+  <div class="split">
+    <div class="left">
+      <pre>
+THREE TRANCHES
+
+TRANCHE A — Settlement pot
+  $50M over 10 years
+  Credible, legally binding
+  (DAF or trust structure)
+  Buys certs at market price
+  ─────────────────────────
+
+TRANCHE B — Seed investments
+  $30M via Impact SAFEs
+  Fund 10-15 early projects:
+  ▸ $3M magnetogenetics (40%)
+  ▸ $5M cond. RNA (30%)
+  ▸ $2M encapsulation (50%)
+  ─────────────────────────
+
+TRANCHE C — Liquidity
+  $20M market-making
+  Solve cold-start problem
+  Attract external capital
+  (biotech VCs, pharma,
+   other foundations)
+      </pre>
+    </div>
+    <div class="right">
+      <pre>
+EXAMPLE: MAGNETOGENETICS PROJECT
+
+1. Funder seeds $2M Impact SAFE
+   → receives 35% of certificates
+
+2. VC sees prediction market,
+   likes risk/return
+   → puts in $2M for 25%
+
+3. PI retains 40%
+
+4. Superforecasters update
+   conditional probabilities
+   as results arrive
+
+5. Primate POC succeeds:
+   → prediction market jumps
+   → VC can exit at 5×
+   → or hold for more upside
+
+6. If project fails:
+   → certs → near zero
+   → funder's remaining pot
+     intact for other projects
+   → system reallocates
+     capital automatically
+      </pre>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 12: What it solves -->
+<div class="slide">
+  <span class="tag blue">Summary</span>
+  <h2>What the prediction market solves</h2>
+  <div class="split">
+    <div class="left">
+      <pre>
+STRUCTURAL PROBLEM     HOW IT'S SOLVED
+
+No intrinsic        →  Market prices certs
+cash flows             against external
+                       benchmark, not
+                       subjective appraisal
+
+Monopsony /         →  Public price signal
+single-buyer           lets MULTIPLE buyers
+risk                   transact independently
+
+Non-fungibility     →  Outcome-level markets
+                       create partial
+                       fungibility across
+                       projects
+
+Moral hazard        →  Many forecasters with
+in evaluation          skin in game replace
+                       single evaluator
+
+Time horizon        →  Continuous trading
+mismatch               creates intermediate
+                       liquidity — no waiting
+                       for outcome resolution
+      </pre>
+    </div>
+    <div class="right">
+      <div class="key-point" style="border-color:var(--accent3);margin-bottom:1.5rem">
+        <strong>What remains unsolved:</strong><br><br>
+        <strong>Outcome selection</strong> — who decides which outcomes to create markets for? This is still a program manager's job.<br><br>
+        <strong>Basic research</strong> — works well for "defined outcome, uncertain path" (ARPA model) but not for "we don't know what to aim for yet."<br><br>
+        <strong>Bootstrapping</strong> — the market improves the system once it exists, but doesn't solve the cold-start problem.
+      </div>
+      <div class="key-point">
+        <strong>Net:</strong> You've built a <em>stock market for R&D impact</em> where price discovery replaces committees, continuous trading replaces long wait cycles, and the market automatically reallocates across competing approaches.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 13: End -->
+<div class="slide title-slide">
+  <h1><span class="gradient-text">A stock market<br>for R&D impact</span></h1>
+  <p class="subtitle">Price discovery replaces subjective evaluation · Continuous trading replaces long wait cycles · Markets reallocate capital automatically across competing approaches</p>
+</div>
+
+</div>
+
+<div class="nav">
+  <button onclick="navigate(-1)">← Prev</button>
+  <span class="counter" id="counter">1 / 13</span>
+  <button onclick="navigate(1)">Next →</button>
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+
+  function show(n) {
+    slides.forEach(s => s.classList.remove('active'));
+    current = ((n % total) + total) % total;
+    slides[current].classList.add('active');
+    counter.textContent = `${current + 1} / ${total}`;
+    progress.style.width = `${((current + 1) / total) * 100}%`;
+  }
+
+  function navigate(dir) { show(current + dir); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); navigate(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); navigate(-1); }
+  });
+
+  // Touch support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) navigate(dx < 0 ? 1 : -1);
+  });
+
+  show(0);
+</script>
+
+</body>
+</html>
