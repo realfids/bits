@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "bits-uk-site",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8080", "--directory", "/Users/ales/Library/Mobile Documents/3L68KQB4HG~com~readdle~CommonDocuments/Documents/bits-uk-site"],
+      "port": 8080
+    }
+  ]
+}
