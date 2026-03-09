@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BiTS UK Fellows</title>
+  <style>
+    :root {
+      --bg: #fafafa;
+      --text: #1a1a1a;
+      --muted: #666;
+      --border: #e0e0e0;
+      --accent: #0055ff;
+      --card-bg: #fff;
+      --tag-bg: #f0f0f0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      text-align: center;
+      padding: 4rem 2rem 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .fellows {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 1.5rem 1.5rem 0;
+    }
+
+    .card-top img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .card-top .name-block h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .card-top .name-block .location {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--tag-bg);
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      margin-top: 0.3rem;
+      color: var(--muted);
+    }
+
+    .card-body {
+      padding: 1rem 1.5rem 0;
+    }
+
+    .programme-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.3rem;
+      color: var(--text);
+    }
+
+    .programme-summary {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .card-footer {
+      padding: 1rem 1.5rem 1.5rem;
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .card-footer a {
+      font-size: 0.82rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .card-footer a:hover {
+      text-decoration: underline;
+    }
+
+    .card-footer .sep {
+      color: var(--border);
+    }
+
+    .bio-toggle {
+      font-size: 0.82rem;
+      color: var(--accent);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      padding: 0;
+    }
+
+    .bio-toggle:hover {
+      text-decoration: underline;
+    }
+
+    .bio-text {
+      display: none;
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.55;
+      padding: 0.75rem 1.5rem 0;
+      border-top: 1px solid var(--border);
+      margin-top: 1rem;
+    }
+
+    .bio-text.open {
+      display: block;
+    }
+
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 3rem 1.5rem 2rem; }
+      header h1 { font-size: 1.8rem; }
+      .fellows { padding: 2rem 1rem; grid-template-columns: 1fr; gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>BiTS UK Fellows</h1>
+  <p>Builders in Transformative Science &mdash; ARIA's programme to back bold scientific visions with the potential to transform entire fields.</p>
+</header>
+
+<main class="fellows">
+
+  <!-- Roslyn Bill -->
+  <article class="card">
+    <div class="card-top">
+      <img src="headshots/roslyn-bill.jpg" alt="Roslyn Bill">
+      <div class="name-block">
+        <h2>Roslyn Bill</h2>
+        <span class="location">Aston University, UK</span>
+        <div><span class="tag">Bioenergetic Engineering</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="programme-name">FLOWCODE</div>
+      <p class="programme-summary">Mapping the brain's plumbing system to halt swelling and slow neurodegeneration. FLOWCODE will create dynamic maps of CNS fluid flow pathways, identify the protein valves that control them, and develop medicines targeting the root causes of brain swelling and cognitive decline &mdash; including a repurposing clinical trial.</p>
+    </div>
+    <div class="card-footer">
+      <a href="pdfs/roslyn-bill.pdf" target="_blank">Concept Note (PDF)</a>
+      <span class="sep">|</span>
+      <button class="bio-toggle" onclick="toggleBio(this)">Bio</button>
+    </div>
+    <div class="bio-text">
+      <p>Roslyn Bill is Aston University's 50th Anniversary Professor of Biotechnology. She obtained her degrees in Chemistry from Oxford University and is an international authority on aquaporin (AQP) water channels. Her team discovered how water enters the brain after injury through AQP4 and identified a licensed medicine that can prevent it. She was awarded an ERC Advanced Grant in 2023 and is a founding member of the AQP sub-committee of IUPHAR/Guide to Pharmacology.</p>
+    </div>
+  </article>
+
+  <!-- Jonathan Melville -->
+  <article class="card">
+    <div class="card-top">
+      <img src="headshots/jonathan-melville.jpeg" alt="Jonathan Melville">
+      <div class="name-block">
+        <h2>Jonathan &ldquo;Jo&rdquo; Melville</h2>
+        <span class="location">Singapore (from San Francisco, CA)</span>
+        <div><span class="tag">Scoping Our Planet</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="programme-name">Primordial Deep Tech</div>
+      <p class="programme-summary">Taming the biochemistry of anaerobic life in reservoirs and oil geologies. A moonshot to reveal, simulate and harness microbial life in the deep subsurface, with implications for energy, carbon storage, environmental remediation and biotechnology &mdash; establishing a UK-led testbed network and high-impact R&amp;D portfolio.</p>
+    </div>
+    <div class="card-footer">
+      <a href="pdfs/jonathan-melville.pdf" target="_blank">Concept Note (PDF)</a>
+      <span class="sep">|</span>
+      <button class="bio-toggle" onclick="toggleBio(this)">Bio</button>
+    </div>
+    <div class="bio-text">
+      <p>Jonathan "Jo" Melville was a Fellow in the US Department of Energy from 2021&ndash;2024, first at the Solar Energy Technologies Office and subsequently at ARPA-E, where he developed and managed over $100 million in high-risk grants for carbon-neutral steel production, synthetic fuels and geologic hydrogen. He holds a PhD in chemistry from MIT and a bachelor's degree from UC Berkeley.</p>
+    </div>
+  </article>
+
+  <!-- Sven Truckenbrodt -->
+  <article class="card">
+    <div class="card-top">
+      <img src="headshots/sven-truckenbrodt.jpg" alt="Sven Truckenbrodt">
+      <div class="name-block">
+        <h2>Sven Truckenbrodt</h2>
+        <span class="location">Cambridge, UK</span>
+        <div><span class="tag">Nature Computes Better</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="programme-name">Mapping the Molecular Brain</div>
+      <p class="programme-summary">A new science of computation: decoding the brain's computational architecture at the molecular level to create blueprints for radically more energy-efficient hardware and continuously learning AI &mdash; via expansion microscopy and molecular brain mapping at synaptic resolution.</p>
+    </div>
+    <div class="card-footer">
+      <a href="pdfs/sven-truckenbrodt.pdf" target="_blank">Concept Note (PDF)</a>
+      <span class="sep">|</span>
+      <button class="bio-toggle" onclick="toggleBio(this)">Bio</button>
+    </div>
+    <div class="bio-text">
+      <p>Sven Truckenbrodt's ambition is to understand how the brain's biological hardware produces cognition and consciousness. He has helped build next-generation brain mapping technology as Lead Scientist Molecular Connectomics at E11 Bio, one of the world's first Focused Research Organizations. He holds a group leader position at the MRC Laboratory of Molecular Biology in Cambridge, UK.</p>
+    </div>
+  </article>
+
+  <!-- Ananth Kumar -->
+  <article class="card">
+    <div class="card-top">
+      <img src="headshots/ananth-kumar.jpeg" alt="Ananth Kumar">
+      <div class="name-block">
+        <h2>Ananth Kumar</h2>
+        <span class="location">Cambridge, UK</span>
+        <div><span class="tag">Sculpting Innate Immunity</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="programme-name">PARAGON &mdash; Mining Genomic Dark Matter</div>
+      <p class="programme-summary">Establishing a global atlas mapping the structural ensembles, chemical modifications and functionalities of non-coding RNAs (ncRNAs), with the potential to revolutionise understanding and introduce new therapeutic targets for diseases such as cancer and neurodegenerative disorders.</p>
+    </div>
+    <div class="card-footer">
+      <a href="pdfs/ananth-kumar.pdf" target="_blank">Concept Note (PDF)</a>
+      <span class="sep">|</span>
+      <button class="bio-toggle" onclick="toggleBio(this)">Bio</button>
+    </div>
+    <div class="bio-text">
+      <p>Ananth Kumar is an entrepreneurial scientist and policy nerd. He obtained his PhD in Biological Science from the MRC Laboratory of Molecular Biology as a Gates Cambridge Scholar, and was a HFSP long-term fellow at Yale University working on non-coding RNAs. Outside of science, he enjoys cricket, Japanese sword fighting and reading fiction.</p>
+    </div>
+  </article>
+
+  <!-- Karim Brohi -->
+  <article class="card">
+    <div class="card-top">
+      <img src="headshots/karim-brohi.jpg" alt="Karim Brohi">
+      <div class="name-block">
+        <h2>Karim Brohi</h2>
+        <span class="location">London, UK</span>
+        <div><span class="tag">Bioenergetic Engineering</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="programme-name">CELL-SHIELD</div>
+      <p class="programme-summary">Creating a universal pause button for cell death. CELL-SHIELD aims to develop therapies that pause cell death for 2&ndash;4 hours during oxygen deprivation, saving lives across trauma, stroke, heart attacks and space exploration &mdash; through a Human Hypoxia-Tolerance Atlas and AI-driven drug discovery.</p>
+    </div>
+    <div class="card-footer">
+      <a href="pdfs/karim-brohi.pdf" target="_blank">Concept Note (PDF)</a>
+      <span class="sep">|</span>
+      <button class="bio-toggle" onclick="toggleBio(this)">Bio</button>
+    </div>
+    <div class="bio-text">
+      <p>Karim Brohi is a trauma surgeon and director of the Centre for Trauma Sciences at Queen Mary University of London. He was a founder of the London Major Trauma System and its director for a decade until May 2025. His research focuses on improving survival after major trauma, focusing on the first minutes and hours after injury.</p>
+    </div>
+  </article>
+
+  <!-- Inga Van den Bossche -->
+  <article class="card">
+    <div class="card-top">
+      <img src="headshots/inga-van-den-bossche.jpg" alt="Inga Van den Bossche">
+      <div class="name-block">
+        <h2>Inga Van den Bossche</h2>
+        <span class="location">London &amp; Oxford, UK</span>
+        <div><span class="tag">Bioenergetic Engineering</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="programme-name">Conditional RNA Therapeutics</div>
+      <p class="programme-summary">Developing a novel class of conditional RNA therapeutics that integrate multi-target engagement and conditional regulatory networks, designed to dynamically respond to cellular environments &mdash; shifting RNA-based therapies from single-target to complex, multi-component systems for autoimmune diseases.</p>
+    </div>
+    <div class="card-footer">
+      <a href="pdfs/inga-van-den-bossche.pdf" target="_blank">Concept Note (PDF)</a>
+      <span class="sep">|</span>
+      <button class="bio-toggle" onclick="toggleBio(this)">Bio</button>
+    </div>
+    <div class="bio-text">
+      <p>A Materials Engineer turned Bioengineer, exploring the intersection of bits and atoms through nucleic acids for therapeutic applications.</p>
+    </div>
+  </article>
+
+  <!-- Alex Araki -->
+  <article class="card">
+    <div class="card-top">
+      <img src="headshots/alex-araki.jpg" alt="Alex Shintaro Araki">
+      <div class="name-block">
+        <h2>Alex Shintaro Araki</h2>
+        <span class="location">London, UK</span>
+        <div><span class="tag">Unlocking Superorganismal Secrets</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="programme-name">ARTEMIS</div>
+      <p class="programme-summary">Bringing new animal species into science. ARTEMIS will create foundational toolkits &mdash; species-specific antibodies, annotated genomes, transgenics &mdash; and a community portal for three non-model mammals: the spiny mouse, naked mole rat and tree shrew, transforming disease research paradigms.</p>
+    </div>
+    <div class="card-footer">
+      <a href="pdfs/alex-araki.pdf" target="_blank">Concept Note (PDF)</a>
+      <span class="sep">|</span>
+      <button class="bio-toggle" onclick="toggleBio(this)">Bio</button>
+    </div>
+    <div class="bio-text">
+      <p>Alex S. Araki is a gene therapy and animal scientist dedicated to solving the predictive validity problem in modern drug discovery. Across academia (Yale, UW&ndash;Madison) and industry (Gordian Biotechnology), he has built complex age-related disease models in multiple species and tested thousands of novel AAV therapies. He is now founder of Artemis FRO.</p>
+    </div>
+  </article>
+
+  <!-- Arzhang Ardavan -->
+  <article class="card">
+    <div class="card-top">
+      <img src="headshots/arzhang-ardavan.png" alt="Arzhang Ardavan">
+      <div class="name-block">
+        <h2>Arzhang Ardavan</h2>
+        <span class="location">Oxford, UK</span>
+        <div><span class="tag">Nature Computes Better</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="programme-name">Assembly for Molecular Technologies</div>
+      <p class="programme-summary">Building a nationally integrated platform for molecular electronics and quantum devices using bottom-up DNA self-assembly to precisely integrate molecular components at meso-scale interfaces &mdash; paving the way for scalable, reproducible molecular technologies including quantum computing.</p>
+    </div>
+    <div class="card-footer">
+      <a href="pdfs/arzhang-ardavan.pdf" target="_blank">Concept Note (PDF)</a>
+      <span class="sep">|</span>
+      <button class="bio-toggle" onclick="toggleBio(this)">Bio</button>
+    </div>
+    <div class="bio-text">
+      <p>Arzhang Ardavan completed his BA and D.Phil at Corpus Christi College, Oxford, in experimental condensed matter physics. He held a Royal Society University Research Fellowship from 2003 to 2012 and has been Professor in Physics at Oxford since 2015. His multidisciplinary research combines physics with strong collaborations in chemistry and world-leading research activities internationally.</p>
+    </div>
+  </article>
+
+  <!-- Nazila Kamaly -->
+  <article class="card">
+    <div class="card-top">
+      <img src="headshots/nazila-kamaly.jpeg" alt="Nazila Kamaly">
+      <div class="name-block">
+        <h2>Nazila Kamaly</h2>
+        <span class="location">London, UK</span>
+        <div><span class="tag">Bioenergetic Engineering</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="programme-name">NEURON &mdash; Translational Research Institute for Nanomedicine</div>
+      <p class="programme-summary">Establishing a dedicated facility to bridge the gap between lab-scale nanomedicine breakthroughs and clinical implementation, enabling de-risking and rapid translation of cutting-edge platforms including mRNA delivery vehicles, immunomodulatory nanoparticles and targeted nanosystems.</p>
+    </div>
+    <div class="card-footer">
+      <a href="pdfs/nazila-kamaly.pdf" target="_blank">Concept Note (PDF)</a>
+      <span class="sep">|</span>
+      <button class="bio-toggle" onclick="toggleBio(this)">Bio</button>
+    </div>
+    <div class="bio-text">
+      <p>Dr Nazila Kamaly is an Associate Professor in Chemistry at Imperial College London. She held postdoctoral and instructor positions at MIT and Harvard Medical School. She leads a multidisciplinary research group developing bioinspired nanomaterials for targeted drug delivery. With over 100 publications, 14,000 citations and an h-index of 33, she has a proven track record in securing cross-sector collaborations.</p>
+    </div>
+  </article>
+
+  <!-- Dean Thomas -->
+  <article class="card">
+    <div class="card-top">
+      <img src="headshots/dean-thomas.png" alt="Dean Thomas">
+      <div class="name-block">
+        <h2>Dean Thomas</h2>
+        <span class="location">Glasgow, UK</span>
+        <div><span class="tag">Manufacturing Abundance</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="programme-name">CATALYSE</div>
+      <p class="programme-summary">A National Institute for Chemical Automation to advance research. CATALYSE will provide shared national infrastructure for automated chemical research &mdash; modular automation kits, centralised synthesis hubs and remote experiment submission &mdash; enabling faster, more reproducible discoveries across UK chemistry.</p>
+    </div>
+    <div class="card-footer">
+      <a href="pdfs/dean-thomas.pdf" target="_blank">Concept Note (PDF)</a>
+      <span class="sep">|</span>
+      <button class="bio-toggle" onclick="toggleBio(this)">Bio</button>
+    </div>
+    <div class="bio-text">
+      <p>Dean is a Research Fellow at the University of Glasgow specialising in Digital Chemistry. He completed his PhD at the University of Manchester, focusing on fuelled artificial molecular machines. Since joining the Cronin Group, he has developed autonomous synthesis platforms, prioritising safe handling of hazardous materials and integration into fully automated chemical manufacturing workflows.</p>
+    </div>
+  </article>
+
+  <!-- Agata Nyga -->
+  <article class="card">
+    <div class="card-top">
+      <img src="headshots/agata-nyga.jpeg" alt="Agata Nyga">
+      <div class="name-block">
+        <h2>Agata Nyga</h2>
+        <span class="location">Cambridge, UK</span>
+        <div><span class="tag">Sculpting Innate Immunity</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="programme-name">Reprogramming Innate Immunity through Mechanomics</div>
+      <p class="programme-summary">Transforming innate immunity into a dual-function sensor-and-effector system by reprogramming immune cells to read mechanical signals in tissues &mdash; stiffness and strain &mdash; to diagnose and therapeutically target cancer, fibrosis and inflammation through a mechanomic immune atlas.</p>
+    </div>
+    <div class="card-footer">
+      <a href="pdfs/agata-nyga.pdf" target="_blank">Concept Note (PDF)</a>
+      <span class="sep">|</span>
+      <button class="bio-toggle" onclick="toggleBio(this)">Bio</button>
+    </div>
+    <div class="bio-text">
+      <p>Agata Nyga, PhD, is an academic-turned-entrepreneur with over 15 years of experience in bioengineering and mechanobiology. She has led research projects at leading international institutions and authored more than 30 peer-reviewed publications. She is now CEO and Founder of SynLaia Innovations, developing a platform for mapping and modulating the mechanical states of cells and tissues.</p>
+    </div>
+  </article>
+
+  <!-- Artem Mishchenko -->
+  <article class="card">
+    <div class="card-top">
+      <img src="headshots/artem-mishchenko.jpg" alt="Artem Mishchenko">
+      <div class="name-block">
+        <h2>Artem Mishchenko</h2>
+        <span class="location">Manchester, UK</span>
+        <div><span class="tag">Nature Computes Better</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="programme-name">Quantum Materials Discovery Catalyst (qdisc)</div>
+      <p class="programme-summary">Building the world's first ImageNet-scale experimental dataset for quantum materials, powered by an autonomous AI-robotics foundry. Combines a multi-agent AI prediction engine, a robotic lab and an open database to boost data generation by 1000x and produce over 1 million datapoints in three years.</p>
+    </div>
+    <div class="card-footer">
+      <a href="#" onclick="return false;" style="color:var(--muted); cursor:default; text-decoration:none;">Concept Note (coming soon)</a>
+      <span class="sep">|</span>
+      <button class="bio-toggle" onclick="toggleBio(this)">Bio</button>
+    </div>
+    <div class="bio-text">
+      <p>Artem Mishchenko is a condensed matter physicist at the University of Manchester. He studies quantum effects in atomically thin materials, combining advanced experiments with AI to rapidly discover new electronic, magnetic and optical properties.</p>
+    </div>
+  </article>
+
+</main>
+
+<footer>
+  <p>BiTS UK &mdash; Builders in Transformative Science &mdash; An ARIA programme</p>
+</footer>
+
+<script>
+  function toggleBio(btn) {
+    const card = btn.closest('.card');
+    const bio = card.querySelector('.bio-text');
+    bio.classList.toggle('open');
+    btn.textContent = bio.classList.contains('open') ? 'Hide Bio' : 'Bio';
+  }
+</script>
+
+</body>
+</html>
